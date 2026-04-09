@@ -9,6 +9,12 @@ export const SignUpForm = () => {
     password: ''
   })
 
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    password: ''
+  })
+
   const fields: Field[] = [
     { label: 'name', type: 'text' },
     { label: 'email', type: 'email' },
@@ -32,6 +38,8 @@ export const SignUpForm = () => {
             type={field.type}
             value={formData[field.label]}
             setValue={(value) => setFormData(prev => ({ ...prev, [field.label]: value }))}
+            error={errors[field.label]}
+            setError={(error) => setErrors(prev => ({...prev, [field.label]: error}))}
           />
         ))
       }
