@@ -61,9 +61,10 @@ export const SignUpForm = () => {
         fields.forEach(field => {
           const error = validators[field.label](formData[field.label])
           newErrors[field.label] = error
-          setErrors(newErrors)
-          if (newErrors[field.label] === '') return
         })
+
+        setErrors(newErrors)
+        if (Object.values(newErrors).some(error => error !== '')) return
 
       }}
       className="h-3/4 bg-white flex flex-col items-center justify-center flex-1 gap-5">
