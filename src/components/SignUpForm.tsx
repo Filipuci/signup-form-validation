@@ -15,6 +15,33 @@ export const SignUpForm = () => {
     password: ''
   })
 
+  const validators = {
+    name: (value: string) => {
+      if (!value.trim()) return 'Campo do nome está vazio!'
+      if (value.length < 2) return 'O nome precisa ter no mínimo 2 caracteres.'
+
+      return ""
+    },
+
+    email: (value: string) => {
+      const index = value.indexOf('@')
+
+      if (!value.trim()) return 'Campo do e-mail está vazio!'
+      if (index === -1) return 'Informe um e-mail inválido!'
+      if (value.slice(index + 1).indexOf('.com') === -1) return 'Insira um e-mail válido!'
+      if (!value.slice(0, index)) return 'Insira um e-mail válido!'
+
+      return ""
+    },
+
+    password: (value: string) => {
+      if (!value.trim()) return 'O campo de senha está vazio!'
+      if (value.length < 8) return 'A senha precisa ter no mínimo 8 caracteres!'
+
+      return ""
+    }
+  }
+
   const fields: Field[] = [
     { label: 'name', type: 'text' },
     { label: 'email', type: 'email' },
@@ -22,7 +49,24 @@ export const SignUpForm = () => {
   ]
 
   return (
-    <form className="h-3/4 bg-white flex flex-col items-center justify-center flex-1 gap-5">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        const newErrors = {
+          name: '',
+          email: '',
+          password: ''
+        }
+
+        fields.forEach(field => {
+          const error = validators[field.label](formData[field.label])
+          newErrors[field.label] = error
+          setErrors(newErrors)
+          if (newErrors[field.label] === '') return
+        })
+
+      }}
+      className="h-3/4 bg-white flex flex-col items-center justify-center flex-1 gap-5">
       <div className="w-1/2 mb-8">
         <p className="font-bold text-3xl">Get Start</p>
         <p className="font-semibold">Already have as account?
@@ -39,7 +83,8 @@ export const SignUpForm = () => {
             value={formData[field.label]}
             setValue={(value) => setFormData(prev => ({ ...prev, [field.label]: value }))}
             error={errors[field.label]}
-            setError={(error) => setErrors(prev => ({...prev, [field.label]: error}))}
+            setError={(error) => setErrors(prev => ({ ...prev, [field.label]: error }))}
+            validator={(value) => validators[field.label](value)}
           />
         ))
       }
