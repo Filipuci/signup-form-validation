@@ -16,7 +16,7 @@ export const SignUpForm = () => {
     }
   })
 
-  const handleFormSubmit: SubmitHandler<SignUpInputs> = (data) => {
+  const handleFormSubmit: SubmitHandler<SignUpInputs> = () => {
     reset()
     setSucess(true)
   }

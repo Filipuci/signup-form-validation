@@ -24,7 +24,11 @@ export const Input = (props: UseControllerProps<SignUpInputs>) => {
         }
       />
 
-      {fieldState.error?.message && <p className="border border-red-500 bg-red-100 text-red-600 mt-4 pl-2 rounded-md">ⓘ {fieldState.error.message}</p>}
+      {fieldState.error?.message &&
+        <p className="border border-red-500 bg-red-100 text-red-600 mt-4 pl-2 rounded-md">
+          ⓘ {fieldState.error.message}
+        </p>
+      }
     </div>
   )
 }
