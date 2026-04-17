@@ -1,29 +1,24 @@
-type Props = {
-  label: string,
-  type: string,
-  value: string,
-  error: string
-  setValue: (value: string) => void
-  setError: (error: string) => void
-  validator: (value: string) => string
-}
+import { useController, type UseControllerProps } from "react-hook-form"
+import type { Inputs } from "../types/Inputs"
 
-export const Input = ({ label, type, value, setValue, error, setError, validator }: Props) => {
+
+
+export const Input = (props: UseControllerProps<Inputs>) => {
+  const { field, fieldState } = useController(props)
 
   return (
     <div className="flex flex-col w-1/2">
-      <label htmlFor={label}>{label}</label>
+      <label htmlFor={props.name}>{props.name}</label>
+
       <input
-        type={type}
-        placeholder={`Enter your ${label}`}
-        id={label}
-        className={`rounded-md outline-none shadow-[2px_2px_8px_#8d8d8d] p-2 mt-1.5 ${error && 'border-2 border-red-400 shadow-none'}`}
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        onBlur={() => setError(validator(value))}
-        onFocus={() => setError('')}
+        {...field}
+        type={props.name === 'password' ? 'password' : props.name === 'email' ? 'email' : 'text'}
+        placeholder={`Enter your ${props.name}`}
+        id={props.name}
+        className={`rounded-md outline-none shadow-[2px_2px_8px_#8d8d8d] p-2 mt-1.5 ${fieldState.error?.message && 'border-2 border-red-400 shadow-none'}`}
       />
-      {error && <span>{error}</span>}
+
+      {fieldState.error?.message && <p>{fieldState.error.message}</p>}
     </div>
   )
 }

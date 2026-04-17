@@ -1,45 +1,15 @@
-import { useState } from "react"
 import { Input } from "./Input"
 import type { Field } from "../types/Field"
+import { useForm, type SubmitHandler } from "react-hook-form"
+import type { Inputs } from "../types/Inputs"
 
 export const SignUpForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: ''
-  })
+  const { control, handleSubmit } = useForm<Inputs>()
 
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    password: ''
-  })
+  const handleFormSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log('Form enviado:', data)
 
-  const validators = {
-    name: (value: string) => {
-      if (!value.trim()) return 'Campo do nome está vazio!'
-      if (value.length < 2) return 'O nome precisa ter no mínimo 2 caracteres.'
-
-      return ""
-    },
-
-    email: (value: string) => {
-      const index = value.indexOf('@')
-
-      if (!value.trim()) return 'Campo do e-mail está vazio!'
-      if (index === -1) return 'Informe um e-mail inválido!'
-      if (value.slice(index + 1).indexOf('.com') === -1) return 'Insira um e-mail válido!'
-      if (!value.slice(0, index)) return 'Insira um e-mail válido!'
-
-      return ""
-    },
-
-    password: (value: string) => {
-      if (!value.trim()) return 'O campo de senha está vazio!'
-      if (value.length < 8) return 'A senha precisa ter no mínimo 8 caracteres!'
-
-      return ""
-    }
+    alert('Cadastro realizado com sucesso!')
   }
 
   const fields: Field[] = [
@@ -48,26 +18,36 @@ export const SignUpForm = () => {
     { label: 'password', type: 'password' }
   ]
 
+  const validators = {
+    name: {
+      minLength: {
+        value: 2,
+        message: 'Campo de name precisa ter o mínimo de 2 caracteres'
+      },
+      maxLength: {
+        value: 10,
+        message: 'Campo de name precisa ter o máximo de 10 caracteres'
+      }
+    },
+    email: {
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: 'Informe um e-mail válido!'
+      }
+    },
+    password: {
+      minLength: {
+        value: 8,
+        message: 'Campo de senha precisa ter o mínimo de 8 caracteres'
+      }
+    }
+  }
+
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        const newErrors = {
-          name: '',
-          email: '',
-          password: ''
-        }
-
-        fields.forEach(field => {
-          const error = validators[field.label](formData[field.label])
-          newErrors[field.label] = error
-        })
-
-        setErrors(newErrors)
-        if (Object.values(newErrors).some(error => error !== '')) return
-
-      }}
-      className="h-3/4 bg-white flex flex-col items-center justify-center flex-1 gap-5">
+      onSubmit={handleSubmit(handleFormSubmit)}
+      className="h-3/4 bg-white flex flex-col items-center justify-center flex-1 gap-5"
+      noValidate>
       <div className="w-1/2 mb-8">
         <p className="font-bold text-3xl">Get Start</p>
         <p className="font-semibold">Already have as account?
@@ -79,13 +59,9 @@ export const SignUpForm = () => {
         fields.map(field => (
           <Input
             key={field.label}
-            label={field.label}
-            type={field.type}
-            value={formData[field.label]}
-            setValue={(value) => setFormData(prev => ({ ...prev, [field.label]: value }))}
-            error={errors[field.label]}
-            setError={(error) => setErrors(prev => ({ ...prev, [field.label]: error }))}
-            validator={(value) => validators[field.label](value)}
+            control={control}
+            name={field.label}
+            rules={{ required: 'Campo obrigatório!', ...validators[field.label] }}
           />
         ))
       }

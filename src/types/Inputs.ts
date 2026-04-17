@@ -1,4 +1,4 @@
-export type FormDataProps = {
+export type Inputs = {
   name: string,
   email: string,
   password: string
