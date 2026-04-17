@@ -1,6 +1,5 @@
-import type { Inputs } from "./Inputs"
+import type { SignUpInputs } from "../validation/signupSchema";
 
 export type Field = {
-  label: keyof Inputs,
-  type: 'text' | 'email' | 'password'
+  label: keyof SignUpInputs,
 }
