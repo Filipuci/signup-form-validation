@@ -7,7 +7,7 @@ import { useState } from "react"
 
 export const SignUpForm = () => {
   const [sucess, setSucess] = useState(false)
-  const { control, handleSubmit } = useForm<SignUpInputs>({
+  const { control, handleSubmit, reset } = useForm<SignUpInputs>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: '',
@@ -17,7 +17,7 @@ export const SignUpForm = () => {
   })
 
   const handleFormSubmit: SubmitHandler<SignUpInputs> = (data) => {
-    console.log('Form enviado:', data)
+    reset()
     setSucess(true)
   }
 
